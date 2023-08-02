@@ -33,20 +33,3 @@ def cfo_est_blue(signal, f_s, m): #BLUE method
         fsum += (wu * phiu)
     # print("\nBLUE Method CFO Est. Done. \n")
     return offset_to_hz(1 / ((fsum * u * f_s) / (2 * np.pi)))
-
-def cfo_est_conventional(signal，p=, q=32+128, d=4, psi=1024): #typical method for cfo 
-    
-        l_dash=int((len(signal)-1)/d)
-        sum_phi=0
-        i=np.arange(0,p-1)
-        a1=q*i+l_dash
-        a2=q*i+l_dash+q
-        a4=np.where(a1<len(signal),a1,a1-len(signal))
-        a5=np.where(a2<len(signal),a2,a2-len(signal))
-        s1=np.take(signal, a4)
-        s2=np.take(signal, a5)
-        sum_phi=np.sum(self.autocorrelate_phi(s1,s2))
-
-        print("\nConventional method for CFO Est. Done. \n")
-
-        return (np.arctan((np.imag(sum_phi))/(self.m*(np.real(sum_phi)))))/(q*psi)
