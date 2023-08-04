@@ -21,12 +21,12 @@ def cfo_est_blue(signal, f_s = 1000000, m = 32): #BLUE method
         s1 = np.take(signal, a4)
         s2 = np.take(signal, a5)
         phi_bu = np.sum(autocorrelate_phi(s1, s2)) / (total_n - i * r)
-        if u >= 1:
+        if i >= 1:
             phiu = (np.arctan(np.imag(phi_bu) / np.real(phi_bu)) - np.arctan(np.imag(last_phiu) / np.real(last_phiu))) % (2 * np.pi)
         else:
             phiu = phi_bu
         last_phiu = phiu
-        wu = ((3 * (u - i) * (u - i + 1)) - (k * (u - k))) / (k * (4 * k * k - 6 * u * k + 3 * u * u - 1))
+        wu = ((3 * (u - i) * (u - i + 1) - (k * (u - k)))) / (k * (4 * k * k - 6 * u * k + 3 * u * u - 1))
         fsum += (wu * phiu)
     # print("\nBLUE Method CFO Est. Done. \n")
-    return 1 / ((fsum * u * f_s) / (2 * np.pi))
+    return fsum * u * f_s / (2 * np.pi)

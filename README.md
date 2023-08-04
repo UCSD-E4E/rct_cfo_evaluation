@@ -9,8 +9,8 @@ Developers should do the following:
 python -m venv .venv
 
 # Activate the virtual environment
-.venv/Scripts/activate.ps1   # for Windows PowerShell
-.venv/Scripts/activate.bat   # for Windows Command Prompt
+.venv\Scripts\activate.ps1   # for Windows PowerShell
+.venv\Scripts\activate.bat   # for Windows Command Prompt
 source .venv/bin/activate    # for bash
 
 # Install in developer mode
