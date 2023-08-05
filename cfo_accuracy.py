@@ -9,7 +9,7 @@ import numpy as np
 from scipy.signal import stft
 from numpy.fft import fft, fftfreq, fftshift
 # from cfo_estimation.blue import cfo_est_blue as blue_estimator
-from cfo_estimation.blue import unfinished_cfo_est as blue_estimator
+from cfo_estimation.blue import unfinished_cfo_est_2 as blue_estimator
 # from cfo_estimation.blue import cfo_est_aom_r as aom_r_estimator 
 # from cfo_estimation.blue import cfo_est_aom_nr as aom_nr_estimator 
 # from cfo_estimation.blue import cfo_est_moa_r as moa_r_estimator 
@@ -21,8 +21,8 @@ from cfo_estimation.blue import unfinished_cfo_est as blue_estimator
 # In[2]:
 
 
-# frequency_offset_test_cases = np.arange(-200000, 200000, 1000)  # Cycles per second
-frequency_offset_test_cases = np.arange(-10000, 10000, 1000)  # Cycles per second
+frequency_offset_test_cases = np.arange(-200000, 200000, 10000)  # Cycles per second
+# frequency_offset_test_cases = np.arange(-10000, 10000, 1000)  # Cycles per second
 sampling_frequency = 1500000    # Samples per second
 acceptable_error = 100  # Cycles per second offset
 
@@ -31,7 +31,7 @@ acceptable_error = 100  # Cycles per second offset
 
 
 # Test Signal Parameters
-signal_length_s = 4 # s
+signal_length_s = 8 # s
 sampling_freq_hz = 1000000 # Hz
 center_freq_hz = 172000000 # Hz
 offset_freq_hz = 5000 # Hz offset from center
@@ -180,8 +180,8 @@ for i in range(len(frequency_offset_test_cases)):
     blue_cfo_est = blue_estimator(test_signals[i], f_s=sampling_freq_hz, R=sampling_freq_hz * ping_period_s)
     error = abs(blue_cfo_est - frequency_offset_test_cases[i])
     errors_blue.append(error)
-    print(f'error = {error}')
-    print(f'estimate = {blue_cfo_est}\n')
+    print(f'estimate = {blue_cfo_est}')
+    print(f'error = {error}\n')
 # other estimators
 # for i in range(len(frequency_offset_test_cases)):
 #         aom_r_est = aom_r_estimator(test_signals[i],b_dash=b_dash, b=b, m=m, q=q, psi=psi, p=p)
