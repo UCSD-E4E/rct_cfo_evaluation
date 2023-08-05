@@ -43,27 +43,42 @@ def unfinished_cfo_est (signal, f_s, R): # R = m
     phi_blue_prev = 0
     phi_u = 0
     fsum=0
-    for u in range(K):
+    for u in range(U-1):
         phi_blue_curr = 0
 #         autocorrelation
-        for m in range(u*R, N):
+        for m in range(u*R, u*R+R):
             phi_blue_curr += signal[m]*np.conj(signal[m-u*R])
         phi_blue_curr = phi_blue_curr / (N - u * R)
         if u >= 1:
-            print(f'phi_blue_curr = {phi_blue_curr}')
-            print(f'phi_blue_prev = {phi_blue_prev}')
+            # print(f'phi_blue_curr = {phi_blue_curr}')
+            # print(f'phi_blue_prev = {phi_blue_prev}')
             phi_u = np.angle(phi_blue_prev) - np.angle(phi_blue_curr)
-            print(f'angle_curr = {np.angle(phi_blue_curr)}')
-            print(f'angle_prev = {np.angle(phi_blue_prev)}')
-            print(f'phi_u = {phi_u}')
-            
+            # print(f'angle_curr = {np.angle(phi_blue_curr)}')
+            # print(f'angle_prev = {np.angle(phi_blue_prev)}')
+            # print(f'phi_u = {phi_u}')
+            # print("updated\n")
             # wu = (3*(U - u) * (U - u + 1) - K * (U - K))/(K*(4*K*K - 6*U*K + 3*U*U - 1))    
             # fsum += wu*phi_u
             fsum += phi_u
         phi_blue_prev = phi_blue_curr
     # return fsum * U * f_s / (2*np.pi)
 #     convert result from rad to Hz
-    return fsum * f_s / (2*np.pi * (K-1))  
+    return fsum * f_s / (2*np.pi * (U-1))  
+
+
+def unfinished_cfo_est_2 (signal, f_s, R): # R = m
+    N = len(signal)
+    U = int(N/R)
+    print(f'N={N},U={U}')
+    phi= 0
+    fsum=0
+    for u in range(1,U):
+        phi= 0
+#         autocorrelation
+        for m in range(u*R, u*R+R):
+            phi += signal[m]*np.conj(signal[m-R])
+        fsum += np.angle(phi)
+    return -fsum * f_s / (2*np.pi * (U-1))
 
 
 def cfo_est_aom_r(signal, b, b_dash, m, q, psi, p): #angle of mean with reuse 
