@@ -1,6 +1,9 @@
 # Created by https://www.toptal.com/developers/gitignore/api/python,visualstudiocode,windows,linux,macos
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,visualstudiocode,windows,linux,macos
 
+### The test run RAW_DATA files###
+2017.07.06.RCT_Test/
+
 ### Linux ###
 *~
 

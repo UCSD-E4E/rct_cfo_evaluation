@@ -10,6 +10,7 @@ from scipy.signal import stft
 from numpy.fft import fft, fftfreq, fftshift
 # from cfo_estimation.blue import cfo_est_blue as blue_estimator
 from cfo_estimation.estimators import cfo_est as estimator
+
 # from cfo_estimation.blue import cfo_est_aom_r as aom_r_estimator 
 # from cfo_estimation.blue import cfo_est_aom_nr as aom_nr_estimator 
 # from cfo_estimation.blue import cfo_est_moa_r as moa_r_estimator 
@@ -143,42 +144,7 @@ def generate_test_signal(
     return signal
 
 
-# In[7]:
-
-
-# signal = generate_test_signal(signal_length_s=signal_length_s,
-#                               sampling_freq_hz=sampling_freq_hz,
-#                               offset_freq_hz=offset_freq_hz,
-#                               ping_duration_s=ping_duration_s,
-#                               ping_period_s=ping_period_s,
-#                               ping_power_db=ping_power_db,
-#                               noise_power_db=noise_power_db)
-# plt.specgram(signal,
-#              NFFT=1024,
-#              Fs=sampling_freq_hz)
-# plt.grid()
-# plt.xlabel('Time (s)')
-# plt.ylabel('Offset (Hz)')
-
-
-# In[8]:
-
-
-
-
-# In[9]:
-
-
-# errors_blue = [[],[],[],[]]
-errors_blue = []
-errors_aom_r=[]
-errors_aom_nr=[]
-errors_moa_r=[]
-errors_moa_nr=[]
-errors_conventional=[]
-errors_mle=[]
-
-m_arr=[16,32,64,128]
+errors=[]
 # blue est
 # for i in range(len(m_arr)):
 for freq in (frequency_offset_test_cases):
@@ -191,7 +157,7 @@ for freq in (frequency_offset_test_cases):
                                   noise_power_db=noise_power_db) 
     cfo_est = estimator(test_signal, f_s=sampling_freq_hz)
     error = abs(cfo_est - freq)
-    errors_blue.append(error)
+    errors.append(error)
     print(f'estimate = {cfo_est}')
     print(f'error = {error}\n')
 # other estimators
