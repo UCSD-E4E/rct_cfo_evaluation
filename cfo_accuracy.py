@@ -9,7 +9,7 @@ import numpy as np
 from scipy.signal import stft
 from numpy.fft import fft, fftfreq, fftshift
 # from cfo_estimation.blue import cfo_est_blue as blue_estimator
-from cfo_estimation.blue import unfinished_cfo_est_2 as blue_estimator
+from cfo_estimation.estimators import cfo_est as estimator
 # from cfo_estimation.blue import cfo_est_aom_r as aom_r_estimator 
 # from cfo_estimation.blue import cfo_est_aom_nr as aom_nr_estimator 
 # from cfo_estimation.blue import cfo_est_moa_r as moa_r_estimator 
@@ -122,11 +122,24 @@ def generate_test_signal(
 
     signal = np.array([0.00001])
     golden_ping_idx = []
-    for _ in range(int(signal_length_s / ping_period_s)):
-        signal = np.append(signal, ping_signal_noise)
-        golden_ping_idx.append(len(signal))
-        signal = np.append(signal, ping_wait_signal)
+
+    # 8 ping_wait_signal + 3 ping_signal_noise in total
+    signal = np.append(signal, ping_wait_signal)
+    signal = np.append(signal, ping_wait_signal)
+    signal = np.append(signal, ping_wait_signal)
+    signal = np.append(signal, ping_wait_signal)
     signal = np.append(signal, ping_signal_noise)
+    signal = np.append(signal, ping_wait_signal)
+    signal = np.append(signal, ping_wait_signal)
+    signal = np.append(signal, ping_wait_signal)
+    signal = np.append(signal, ping_wait_signal)
+    
+
+    # for _ in range(int(signal_length_s / ping_period_s)):
+    #     signal = np.append(signal, ping_signal_noise)
+    #     golden_ping_idx.append(len(signal))
+    #     signal = np.append(signal, ping_wait_signal)
+    # signal = np.append(signal, ping_signal_noise)
     return signal
 
 
@@ -151,14 +164,6 @@ def generate_test_signal(
 # In[8]:
 
 
-test_signals = [generate_test_signal(signal_length_s=signal_length_s,
-                                  sampling_freq_hz=sampling_freq_hz,
-                                  offset_freq_hz=test_freq,
-                                  ping_duration_s=ping_duration_s,
-                                  ping_period_s=ping_period_s,
-                                  ping_power_db=ping_power_db,
-                                  noise_power_db=noise_power_db) 
-                for test_freq in frequency_offset_test_cases]
 
 
 # In[9]:
@@ -176,11 +181,18 @@ errors_mle=[]
 m_arr=[16,32,64,128]
 # blue est
 # for i in range(len(m_arr)):
-for i in range(len(frequency_offset_test_cases)):
-    blue_cfo_est = blue_estimator(test_signals[i], f_s=sampling_freq_hz, R=sampling_freq_hz * ping_period_s)
-    error = abs(blue_cfo_est - frequency_offset_test_cases[i])
+for freq in (frequency_offset_test_cases):
+    test_signal = generate_test_signal(signal_length_s=signal_length_s,
+                                  sampling_freq_hz=sampling_freq_hz,
+                                  offset_freq_hz= freq,
+                                  ping_duration_s=ping_duration_s,
+                                  ping_period_s=ping_period_s,
+                                  ping_power_db=ping_power_db,
+                                  noise_power_db=noise_power_db) 
+    cfo_est = estimator(test_signal, f_s=sampling_freq_hz)
+    error = abs(cfo_est - freq)
     errors_blue.append(error)
-    print(f'estimate = {blue_cfo_est}')
+    print(f'estimate = {cfo_est}')
     print(f'error = {error}\n')
 # other estimators
 # for i in range(len(frequency_offset_test_cases)):
